@@ -1,5 +1,6 @@
 package net.questcraft.platform.handler.cscapi.serializer;
 
+import net.questcraft.platform.handler.cscapi.communication.websocket.WBPacket;
 import net.questcraft.platform.handler.cscapi.error.CSCException;
 
 import java.io.IOException;

@@ -5,7 +5,7 @@ import com.sun.xml.internal.ws.util.ByteArrayBuffer;
 import net.questcraft.platform.handler.cscapi.error.CSCException;
 import net.questcraft.platform.handler.cscapi.error.InvalidClassIDDescriptor;
 import net.questcraft.platform.handler.cscapi.serializer.DeserializationHandler;
-import net.questcraft.platform.handler.cscapi.serializer.WBPacket;
+import net.questcraft.platform.handler.cscapi.communication.websocket.WBPacket;
 import net.questcraft.platform.handler.cscapi.serializer.serializers.BytePacketSerializer;
 
 import java.io.IOException;

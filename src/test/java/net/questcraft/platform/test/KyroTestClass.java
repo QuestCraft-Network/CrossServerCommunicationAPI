@@ -1,7 +1,7 @@
 package net.questcraft.platform.test;
 
 import net.questcraft.platform.handler.cscapi.annotations.ClassID;
-import net.questcraft.platform.handler.cscapi.serializer.WBPacket;
+import net.questcraft.platform.handler.cscapi.communication.websocket.WBPacket;
 
 @ClassID("KyroTestClass")
 public class KyroTestClass implements WBPacket {

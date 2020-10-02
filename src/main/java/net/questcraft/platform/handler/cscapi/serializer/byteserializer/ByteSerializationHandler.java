@@ -4,7 +4,7 @@ import com.esotericsoftware.kryo.io.Output;
 import com.sun.xml.internal.ws.util.ByteArrayBuffer;
 import net.questcraft.platform.handler.cscapi.error.CSCException;
 import net.questcraft.platform.handler.cscapi.serializer.SerializationHandler;
-import net.questcraft.platform.handler.cscapi.serializer.WBPacket;
+import net.questcraft.platform.handler.cscapi.communication.websocket.WBPacket;
 import net.questcraft.platform.handler.cscapi.serializer.serializers.BytePacketSerializer;
 
 import java.io.ByteArrayOutputStream;
@@ -14,9 +14,9 @@ import java.util.Arrays;
 
 
 public class ByteSerializationHandler<T> extends ByteSerialization implements SerializationHandler<T> {
-    private final Class<T> kryoClass;
+    private final Class<?> kryoClass;
 
-    public ByteSerializationHandler(Class<T> kryoClass) {
+    public ByteSerializationHandler(Class<?> kryoClass) {
         kryo.register(kryoClass);
         this.kryoClass = kryoClass;
     }
