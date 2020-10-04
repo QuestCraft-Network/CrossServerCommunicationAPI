@@ -17,7 +17,8 @@ public class WSTesting {
     public void testClient() throws CSCException, Exception {
 //        Spark.port(8001);
         ChannelPipeline client = createClient();
-        Thread.sleep(1000*5000);
+
+        Spark.awaitInitialization();
     }
 
     @Test
@@ -41,7 +42,7 @@ public class WSTesting {
 
     private ChannelPipeline createClient() throws CSCException, Exception {
         ChannelHandler channelHandler = CSCAPI.getAPI().getChannelHandler(ChannelType.CLIENT_WS);
-        ChannelPipeline pipeline = new TestChannelPipeline("ws://localhost:8000/somethingGreat");
+        ChannelPipeline pipeline = new TestChannelPipeline("ws://localhost:8000/somethingGreat", true);
 
         return channelHandler.registerPipeline(pipeline);
     }

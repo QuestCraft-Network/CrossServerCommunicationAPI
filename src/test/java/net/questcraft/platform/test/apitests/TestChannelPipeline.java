@@ -5,8 +5,10 @@ import net.questcraft.platform.handler.cscapi.communication.websocket.SocketPipe
 import org.eclipse.jetty.websocket.api.Session;
 
 public class TestChannelPipeline extends SocketPipeline {
-    public TestChannelPipeline(String path) {
-        super(path);
+
+
+    public TestChannelPipeline(String path, boolean autoReconnect) {
+        super(path, autoReconnect);
     }
 
     @Override

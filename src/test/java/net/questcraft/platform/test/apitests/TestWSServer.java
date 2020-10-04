@@ -8,7 +8,7 @@ import net.questcraft.platform.handler.cscapi.communication.websocket.SocketPipe
 import net.questcraft.platform.handler.cscapi.error.CSCException;
 import spark.Spark;
 
-public class TestMain {
+public class TestWSServer {
     public static void main(String[] args) throws CSCException, Exception {
         Spark.port(8000);
         SocketPipeline wsServer = (SocketPipeline) createWSServer(ChannelType.SERVER_WS);
@@ -19,7 +19,7 @@ public class TestMain {
 
     private static ChannelPipeline createWSServer(ChannelType serverWss) throws CSCException, Exception {
         ChannelHandler handler = CSCAPI.getAPI().getChannelHandler(serverWss);
-        ChannelPipeline pipeline = new TestChannelPipeline("/somethingGreat");
+        ChannelPipeline pipeline = new TestChannelPipeline("/somethingGreat", true);
 
         return handler.registerPipeline(pipeline);
     }

@@ -7,6 +7,10 @@ import org.eclipse.jetty.websocket.api.annotations.*;
 
 import java.io.IOException;
 
+/**
+ * Handler for all raw WebSocket incoming data
+ */
+
 @WebSocket
 public class SocketPipelineHandler {
     private final WebSocketHandler handler;

@@ -80,5 +80,10 @@ public abstract class SocketPipeline implements ChannelPipeline {
         this.session.getRemote().sendBytes(byteBuffer);
     }
 
+    public void closeConnection() throws UnconnectedWebSocketException {
+        if (!this.isConnected) throw new UnconnectedWebSocketException("Current Websocket is not connected, There must be a open connection to be able to close it");
+        this.autoReconnect = false;
+        this.session.close();
+    }
 
 }
