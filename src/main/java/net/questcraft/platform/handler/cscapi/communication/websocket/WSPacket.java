@@ -10,5 +10,5 @@ import net.questcraft.platform.handler.cscapi.communication.Packet;
  * @version 1.0-SNAPSHOT
  */
 
-public interface WBPacket extends Packet {
+public interface WSPacket extends Packet {
 }

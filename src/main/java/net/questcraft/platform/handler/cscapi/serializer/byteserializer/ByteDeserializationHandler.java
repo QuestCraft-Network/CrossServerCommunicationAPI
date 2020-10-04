@@ -2,10 +2,10 @@ package net.questcraft.platform.handler.cscapi.serializer.byteserializer;
 
 import com.esotericsoftware.kryo.io.Input;
 import com.sun.xml.internal.ws.util.ByteArrayBuffer;
+import net.questcraft.platform.handler.cscapi.communication.Packet;
 import net.questcraft.platform.handler.cscapi.error.CSCException;
 import net.questcraft.platform.handler.cscapi.error.InvalidClassIDDescriptor;
 import net.questcraft.platform.handler.cscapi.serializer.DeserializationHandler;
-import net.questcraft.platform.handler.cscapi.communication.websocket.WBPacket;
 import net.questcraft.platform.handler.cscapi.serializer.serializers.BytePacketSerializer;
 
 import java.io.IOException;
@@ -13,7 +13,7 @@ import java.util.Set;
 
 public class ByteDeserializationHandler extends ByteSerialization implements DeserializationHandler {
 
-    public WBPacket deserialize(Object packet, Set<Class<?>> applicableClasses) throws IOException, CSCException {
+    public Packet deserialize(Object packet, Set<Class<?>> applicableClasses) throws IOException, CSCException {
         if (!(packet instanceof byte[])) throw new IllegalArgumentException("Packet Object must be of type byte[] to be deserializable by the ByteDeserializationHandler");
          byte[] bytePacket = (byte[]) packet;
 
@@ -21,9 +21,9 @@ public class ByteDeserializationHandler extends ByteSerialization implements Des
         Input input = new Input(kryoBytes);
 
         Object object = kryo.readObject(input, this.getClassType(bytePacket, applicableClasses));
-        if (!(object instanceof WBPacket)) throw new IllegalArgumentException("Packet type is not of type WBPacket");
+        if (!(object instanceof Packet)) throw new IllegalArgumentException("Object type is not of type Packet");
 
-        return (WBPacket) object;
+        return (Packet) object;
     }
 
     private Class<?> getClassType(byte[] bytes, Set<Class<?>> applicableClasses) throws InvalidClassIDDescriptor {

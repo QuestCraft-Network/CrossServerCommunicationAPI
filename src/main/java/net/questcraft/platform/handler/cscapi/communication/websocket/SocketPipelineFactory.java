@@ -8,9 +8,7 @@ import java.lang.reflect.InvocationTargetException;
 
 public class SocketPipelineFactory {
 
-    private SocketPipelineFactory() {}
-
-    public static TempSocketPipeline getTemp(String path) {
+    public static TempSocketPipeline createTemp(String path) {
         return new TempSocketPipeline(path);
     }
 

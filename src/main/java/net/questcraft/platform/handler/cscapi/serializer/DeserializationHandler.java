@@ -1,6 +1,7 @@
 package net.questcraft.platform.handler.cscapi.serializer;
 
-import net.questcraft.platform.handler.cscapi.communication.websocket.WBPacket;
+import net.questcraft.platform.handler.cscapi.communication.Packet;
+import net.questcraft.platform.handler.cscapi.communication.websocket.WSPacket;
 import net.questcraft.platform.handler.cscapi.error.CSCException;
 
 import java.io.IOException;
@@ -15,5 +16,5 @@ import java.util.Set;
  */
 
 public interface DeserializationHandler extends Serializer {
-    WBPacket deserialize(Object packet, Set<Class<?>> applicableClasses) throws IOException, CSCException;
+    Packet deserialize(Object packet, Set<Class<?>> applicableClasses) throws IOException, CSCException;
 }
