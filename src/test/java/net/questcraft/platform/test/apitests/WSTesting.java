@@ -4,21 +4,30 @@ import net.questcraft.platform.handler.cscapi.CSCAPI;
 import net.questcraft.platform.handler.cscapi.communication.ChannelHandler;
 import net.questcraft.platform.handler.cscapi.communication.ChannelPipeline;
 import net.questcraft.platform.handler.cscapi.communication.ChannelType;
+import net.questcraft.platform.handler.cscapi.communication.websocket.SocketPipeline;
 import net.questcraft.platform.handler.cscapi.error.CSCException;
+import net.questcraft.platform.handler.cscapi.error.CSCInstantiationException;
+import net.questcraft.platform.test.KryoTestClass;
 import org.eclipse.jetty.websocket.client.ClientUpgradeRequest;
 import org.eclipse.jetty.websocket.client.WebSocketClient;
 import org.junit.Test;
 import spark.Spark;
 
+import java.io.IOException;
 import java.net.URI;
 
 public class WSTesting {
-    @Test
-    public void testClient() throws CSCException, Exception {
-//        Spark.port(8001);
-        ChannelPipeline client = createClient();
+    public static void main(String[] args) {
+        try {
+            ChannelPipeline client = createClient();
+            client.registerPacket(KryoTestClass.class);
+            for (int i = 0; i < 100; i++) {
+                client.queueMessage(new KryoTestClass(1, 10, "HEY MAN"));
+            }
 
-        Spark.awaitInitialization();
+        } catch (CSCException | Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Test
@@ -35,30 +44,19 @@ public class WSTesting {
 
         client.connect(new TestSPHandler(), destination, request);
 
-        Thread.sleep(1000*30);
+        Thread.sleep(1000 * 30);
 
 //        Spark.awaitInitialization();
-    }
+    }//ws://192.168.0.28:8000/somethingGreat
 
-    private ChannelPipeline createClient() throws CSCException, Exception {
+    private static ChannelPipeline createClient() throws CSCException, Exception {
         ChannelHandler channelHandler = CSCAPI.getAPI().getChannelHandler(ChannelType.CLIENT_WS);
-        ChannelPipeline pipeline = new TestChannelPipeline("ws://localhost:8000/somethingGreat", true);
+        SocketPipeline.Builder builder = new SocketPipeline.Builder("ws://localhost:8000/somethingGreat", TestChannelPipeline.class);
+        builder.autoReconnect(true);
 
-        return channelHandler.registerPipeline(pipeline);
+        return channelHandler.registerPipeline(builder);
     }
 
-    @Test
-    public void testServer() throws CSCException, Exception {
-
-
-        Spark.awaitInitialization();
-
-
-
-
-//        wsClient.sendMessage(new KyroTestClass(1, 5, "COOOL"));
-
-    }
 
 
 }

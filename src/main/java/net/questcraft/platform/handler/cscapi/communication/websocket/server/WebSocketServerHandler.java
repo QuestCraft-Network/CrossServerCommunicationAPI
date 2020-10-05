@@ -4,6 +4,7 @@ import net.questcraft.platform.handler.cscapi.communication.ChannelPipeline;
 import net.questcraft.platform.handler.cscapi.communication.websocket.SocketPipeline;
 import net.questcraft.platform.handler.cscapi.communication.websocket.SocketPipelineHandler;
 import net.questcraft.platform.handler.cscapi.communication.websocket.WebSocketHandler;
+import net.questcraft.platform.handler.cscapi.error.CSCInstantiationException;
 import spark.Spark;
 
 public class WebSocketServerHandler extends WebSocketHandler {
@@ -11,7 +12,8 @@ public class WebSocketServerHandler extends WebSocketHandler {
     }
 
     @Override
-    public ChannelPipeline registerPipeline(ChannelPipeline chPipeline) {
+    public ChannelPipeline registerPipeline(ChannelPipeline.Builder builder) throws CSCInstantiationException, Exception {
+        ChannelPipeline chPipeline = super.registerPipeline(builder);
         if (!(chPipeline instanceof SocketPipeline)) throw new IllegalArgumentException("ChannelPipeline type must be of SocketPipeline to be usable with the WebSocket API");
         SocketPipeline pipeline = (SocketPipeline) chPipeline;
 

@@ -1,6 +1,8 @@
 package net.questcraft.platform.handler.cscapi.communication;
 
+import net.questcraft.platform.handler.cscapi.communication.websocket.SocketPipeline;
 import net.questcraft.platform.handler.cscapi.error.CSCException;
+import net.questcraft.platform.handler.cscapi.error.CSCInstantiationException;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -21,7 +23,8 @@ public abstract class ChannelHandler {
         this.registeredClasses = new HashSet<>();
     }
 
-    public ChannelPipeline registerPipeline(ChannelPipeline pipeline) throws Exception {
+    public ChannelPipeline registerPipeline(ChannelPipeline.Builder builder) throws CSCInstantiationException, Exception {
+        ChannelPipeline pipeline = builder.build(this);
         this.pipelines.add(pipeline);
         return pipeline;
     }
@@ -31,6 +34,10 @@ public abstract class ChannelHandler {
     }
 
     protected abstract void onMessage(ChannelPipeline pipeline, Object packet) throws IOException, CSCException;
+
+    public boolean isPacketRegistered(Class<?> cls) {
+        return this.registeredClasses.contains(cls);
+    }
 
 
 }

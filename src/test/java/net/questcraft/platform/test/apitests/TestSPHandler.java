@@ -14,7 +14,6 @@ public class TestSPHandler {
     @OnWebSocketMessage
     public void onMessage(Session session, String string) throws IOException {
         System.out.println(string);
-        session.getRemote().sendString("HI");
     }
 
     @OnWebSocketConnect
