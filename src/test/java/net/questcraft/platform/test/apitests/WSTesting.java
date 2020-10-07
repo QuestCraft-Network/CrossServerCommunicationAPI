@@ -3,17 +3,15 @@ package net.questcraft.platform.test.apitests;
 import net.questcraft.platform.handler.cscapi.CSCAPI;
 import net.questcraft.platform.handler.cscapi.communication.ChannelHandler;
 import net.questcraft.platform.handler.cscapi.communication.ChannelPipeline;
-import net.questcraft.platform.handler.cscapi.communication.ChannelType;
+import net.questcraft.platform.handler.cscapi.communication.channeltypes.ChannelType;
+import net.questcraft.platform.handler.cscapi.communication.channeltypes.DefaultChannelTypes;
 import net.questcraft.platform.handler.cscapi.communication.websocket.SocketPipeline;
 import net.questcraft.platform.handler.cscapi.error.CSCException;
-import net.questcraft.platform.handler.cscapi.error.CSCInstantiationException;
 import net.questcraft.platform.test.KryoTestClass;
 import org.eclipse.jetty.websocket.client.ClientUpgradeRequest;
 import org.eclipse.jetty.websocket.client.WebSocketClient;
 import org.junit.Test;
-import spark.Spark;
 
-import java.io.IOException;
 import java.net.URI;
 
 public class WSTesting {
@@ -50,7 +48,7 @@ public class WSTesting {
     }//ws://192.168.0.28:8000/somethingGreat
 
     private static ChannelPipeline createClient() throws CSCException, Exception {
-        ChannelHandler channelHandler = CSCAPI.getAPI().getChannelHandler(ChannelType.CLIENT_WS);
+        ChannelHandler channelHandler = CSCAPI.getAPI().getChannelHandler(DefaultChannelTypes.CLIENT_WS);
         SocketPipeline.Builder builder = new SocketPipeline.Builder("ws://localhost:8000/somethingGreat", TestChannelPipeline.class);
         builder.autoReconnect(true);
 

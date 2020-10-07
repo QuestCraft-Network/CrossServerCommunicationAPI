@@ -2,10 +2,8 @@ package net.questcraft.platform.handler.cscapi.communication;
 
 import net.questcraft.platform.handler.cscapi.error.CSCException;
 import net.questcraft.platform.handler.cscapi.error.CSCInstantiationException;
-import org.eclipse.jetty.websocket.api.Session;
 
 import java.io.IOException;
-import java.nio.channels.Channel;
 
 public interface ChannelPipeline {
     /**
@@ -47,6 +45,17 @@ public interface ChannelPipeline {
     void registerPacket(Class<? extends Packet> packet);
 
     abstract class Builder {
+        protected final Class<? extends ChannelPipeline> pipeCls;
+
+        public Builder(Class<? extends ChannelPipeline> pipeCls) {
+            this.pipeCls = pipeCls;
+        }
+
         public abstract ChannelPipeline build(ChannelHandler handler) throws CSCInstantiationException;
+
+        public boolean isProductInstanceOf(Class<?> cls) {
+            return  (this.pipeCls.isAssignableFrom(cls));
+        }
+
     }
 }

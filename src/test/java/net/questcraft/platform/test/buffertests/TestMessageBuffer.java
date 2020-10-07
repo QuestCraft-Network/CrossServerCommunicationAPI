@@ -1,15 +1,15 @@
 package net.questcraft.platform.test.buffertests;
 
 import net.questcraft.platform.handler.cscapi.communication.Packet;
-import net.questcraft.platform.handler.cscapi.communication.websocket.messagebuffer.MessageBuffer;
-import net.questcraft.platform.handler.cscapi.communication.websocket.messagebuffer.SocketMessageBuffer;
+import net.questcraft.platform.handler.cscapi.communication.messagebuffer.MessageBuffer;
+import net.questcraft.platform.handler.cscapi.communication.messagebuffer.PacketMessageBuffer;
 import net.questcraft.platform.test.KryoTestClass;
 import org.junit.Test;
 
 public class TestMessageBuffer {
     @Test
     public void testBuffer() {
-        MessageBuffer buffer = new SocketMessageBuffer();
+        MessageBuffer buffer = new PacketMessageBuffer();
 
         Packet packet = new KryoTestClass(1, 1, "");
         Packet packet2 = new KryoTestClass(5, 1, "");

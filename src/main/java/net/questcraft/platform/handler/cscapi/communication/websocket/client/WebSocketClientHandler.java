@@ -11,15 +11,23 @@ import org.eclipse.jetty.websocket.client.WebSocketClient;
 import java.net.URI;
 
 
-public class WebSocketClientHandler extends WebSocketHandler {
+public class  WebSocketClientHandler extends WebSocketHandler {
     public WebSocketClientHandler() {
     }
 
+    /**
+     * Registers a ChannelPipeline with the WebSocketHandler
+     *
+     * @param builder A ChannelPipelines Builder to initiate a new ChannelPipeline
+     * @return ChannelPipeline, Will return the initiated ChannelPipeline
+     * @throws CSCInstantiationException If fails to instantiate the given class
+     */
     @Override
     public ChannelPipeline registerPipeline(ChannelPipeline.Builder builder) throws CSCInstantiationException, Exception {
-        ChannelPipeline chPipeline = super.registerPipeline(builder);
-        if (!(chPipeline instanceof SocketPipeline))
+        if (builder.isProductInstanceOf(SocketPipeline.class))
             throw new IllegalArgumentException("ChannelPipeline type must be of SocketPipeline to be usable with the WebSocket API");
+
+        ChannelPipeline chPipeline = super.registerPipeline(builder);
         SocketPipeline pipeline = (SocketPipeline) chPipeline;
 
         WebSocketClient client = new WebSocketClient();
@@ -34,8 +42,15 @@ public class WebSocketClientHandler extends WebSocketHandler {
     }
 
 
+    /**
+     *  A protected utility for reconnecting broken pipelines
+     *
+     * @param pipeline The Pipeline to reconnect
+     * @throws Exception In case of a invalid URI or failure to reconnect the client
+     */
     @Override
     protected void reconnectPipeline(SocketPipeline pipeline) throws Exception {
+        if (pipeline.isConnected()) return;
         Thread.sleep(RECONNECT_DELAY);
         WebSocketClient client = new WebSocketClient();
         client.start();
