@@ -1,9 +1,9 @@
 package net.questcraft.platform.test;
 
-import net.questcraft.platform.handler.cscapi.annotations.ClassID;
+import net.questcraft.platform.handler.cscapi.annotations.SocketClassID;
 import net.questcraft.platform.handler.cscapi.communication.websocket.WSPacket;
 
-@ClassID("KyroTestClass")
+@SocketClassID("KyroTestClass")
 public class KryoTestClass implements WSPacket {
     private int intOne;
     private Integer integerTwo;

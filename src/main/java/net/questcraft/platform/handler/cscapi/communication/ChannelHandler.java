@@ -1,6 +1,5 @@
 package net.questcraft.platform.handler.cscapi.communication;
 
-import net.questcraft.platform.handler.cscapi.communication.websocket.SocketPipeline;
 import net.questcraft.platform.handler.cscapi.error.CSCException;
 import net.questcraft.platform.handler.cscapi.error.CSCInstantiationException;
 

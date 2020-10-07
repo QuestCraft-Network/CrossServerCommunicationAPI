@@ -4,7 +4,6 @@ import net.questcraft.platform.handler.cscapi.communication.ChannelHandler;
 import net.questcraft.platform.handler.cscapi.communication.ChannelPipeline;
 import net.questcraft.platform.handler.cscapi.communication.Packet;
 import net.questcraft.platform.handler.cscapi.error.CSCException;
-import net.questcraft.platform.handler.cscapi.error.CSCInstantiationException;
 import net.questcraft.platform.handler.cscapi.error.WebSocketException;
 import net.questcraft.platform.handler.cscapi.serializer.DeserializationHandler;
 import net.questcraft.platform.handler.cscapi.serializer.byteserializer.ByteDeserializationHandler;
