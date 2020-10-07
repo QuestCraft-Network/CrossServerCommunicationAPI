@@ -1,21 +1,21 @@
 package net.questcraft.platform.test;
 
-import net.questcraft.platform.handler.cscapi.annotations.ClassID;
-import net.questcraft.platform.handler.cscapi.serializer.WBPacket;
+import net.questcraft.platform.handler.cscapi.annotations.SocketClassID;
+import net.questcraft.platform.handler.cscapi.communication.websocket.WSPacket;
 
-@ClassID("KyroTestClass")
-public class KyroTestClass implements WBPacket {
+@SocketClassID("KyroTestClass")
+public class KryoTestClass implements WSPacket {
     private int intOne;
     private Integer integerTwo;
     String string;
 
-    public KyroTestClass(int intOne, Integer integerTwo, String string) {
+    public KryoTestClass(int intOne, Integer integerTwo, String string) {
         this.intOne = intOne;
         this.integerTwo = integerTwo;
         this.string = string;
     }
 
-    public KyroTestClass() {
+    public KryoTestClass() {
     }
 
     public int getIntOne() {

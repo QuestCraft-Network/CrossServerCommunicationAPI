@@ -5,7 +5,8 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-@Target(ElementType.LOCAL_VARIABLE)
-@Retention(RetentionPolicy.SOURCE)
-public @interface CustomPacketSerializer {
+@Target(ElementType.TYPE)
+@Retention(RetentionPolicy.RUNTIME)
+public @interface SocketClassID {
+    String value() default "";
 }
