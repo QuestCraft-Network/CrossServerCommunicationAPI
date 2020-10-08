@@ -59,7 +59,7 @@ public class TestClass implements WSPacket { //It must implement the Type Of pac
     private Integer integerTwo;
     transient String string; //transient fields wont be serialized
 
-    public KryoTestClass(int intOne, Integer integerTwo, String string) {
+    public TestClass(int intOne, Integer integerTwo, String string) {
         this.intOne = intOne;
         this.integerTwo = integerTwo;
         this.string = string;
@@ -95,7 +95,7 @@ public class TestClass implements WSPacket { //It must implement the Type Of pac
 
     @Override
     public String toString() {
-        return "KryoTestClass{" +
+        return "TestClass{" +
                 "intOne=" + intOne +
                 ", integerTwo=" + integerTwo +
                 ", string='" + string + '\'' +
