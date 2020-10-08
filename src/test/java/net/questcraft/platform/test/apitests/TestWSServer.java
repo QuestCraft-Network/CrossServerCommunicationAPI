@@ -16,6 +16,7 @@ public class TestWSServer {
         SocketPipeline wsServer = (SocketPipeline) createWSServer(DefaultChannelTypes.SERVER_WS);
         wsServer.registerPacket(KryoTestClass.class);
 
+
 //        Spark.webSocket("/somethingGreat", new TestSPHandler());
 //        Spark.init();
     }
@@ -24,6 +25,7 @@ public class TestWSServer {
         ChannelHandler handler = CSCAPI.getAPI().getChannelHandler(serverWss);
         SocketPipeline.Builder builder = new SocketPipeline.Builder("/somethingGreat", TestChannelPipeline.class);
         builder.autoReconnect(true);
+
 
         return handler.registerPipeline(builder);
     }

@@ -15,13 +15,14 @@ import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.nio.ByteBuffer;
+import java.util.logging.SocketHandler;
 
 public abstract class SocketPipeline implements ChannelPipeline {
     private final String path;
     private Session session;
 
     private final MessageBuffer queueBuffer;
-    private final ChannelHandler handler;
+    private final WebSocketHandler handler;
 
     private boolean isConnected = false;
     private boolean autoReconnect;
@@ -50,6 +51,13 @@ public abstract class SocketPipeline implements ChannelPipeline {
      */
     public void onClose(int statusCode, String reason) {
         this.isConnected = false;
+        if (this.autoReconnect) {
+            try {
+                this.handler.reconnectPipeline(this);
+            } catch (Exception e) {
+                throw new RuntimeException("Failed to reconnect broken pipeline, Error: " + e.getMessage());
+            }
+        }
     }
 
     /**
@@ -105,6 +113,7 @@ public abstract class SocketPipeline implements ChannelPipeline {
 
     public boolean isConnected() {
         return this.isConnected;
+
     }
 
     @Override
@@ -165,7 +174,7 @@ public abstract class SocketPipeline implements ChannelPipeline {
     public static class Builder extends ChannelPipeline.Builder {
         private final String path;
         private boolean autoReconnect;
-        private ChannelHandler handler;
+        private WebSocketHandler handler;
 
         public Builder(String path, Class<? extends ChannelPipeline> pipeCls) {
             super(pipeCls);
@@ -179,7 +188,8 @@ public abstract class SocketPipeline implements ChannelPipeline {
                     throw new IllegalArgumentException("Class is not of type SocketPipeline, To be registered as a Pipeline this must be the case");
                 Class<? extends SocketPipeline> socketCls = (Class<? extends SocketPipeline>) this.pipeCls;
 
-                this.handler = handler;
+                if (!(handler instanceof WebSocketHandler)) throw new IllegalArgumentException("ChannelHandler must be of type WebSocketHandler");
+                this.handler = (WebSocketHandler) handler;
 
                 Constructor<? extends SocketPipeline> constructor = socketCls.getConstructor(Builder.class);
                 SocketPipeline socketPipeline = constructor.newInstance(this);
