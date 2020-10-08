@@ -5,6 +5,8 @@ import net.questcraft.platform.handler.cscapi.annotations.SocketClassID;
 import net.questcraft.platform.handler.cscapi.error.InvalidClassIDDescriptor;
 
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 
 public abstract class ByteSerialization {
     protected final Kryo kryo;
@@ -29,5 +31,15 @@ public abstract class ByteSerialization {
         if (classID.value().isEmpty()) throw new InvalidClassIDDescriptor("Invalid ClassID, ClassID Cannot be empty");
 
         return classID.value();
+    }
+
+    protected void registerMemberVariables(Class cls) {
+        Field[] declaredFields = cls.getDeclaredFields();
+        for (Field field : declaredFields) {
+            Class<?> fieldType = field.getType();
+            if (!fieldType.isPrimitive() && !Modifier.isTransient(field.getModifiers())) {
+                this.kryo.register(fieldType);
+            }
+        }
     }
 }

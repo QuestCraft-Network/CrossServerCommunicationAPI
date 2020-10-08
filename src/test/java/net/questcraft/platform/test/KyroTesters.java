@@ -13,7 +13,7 @@ public class KyroTesters {
         Kryo kryo = new Kryo();
         kryo.register(KryoTestClass.class);
 
-        KryoTestClass test = new KryoTestClass(1, 5, "HEY mann");
+        KryoTestClass test = new KryoTestClass(1, 1, "asdf", null);
         Output output = new Output(new ByteArrayOutputStream());
         kryo.writeObject(output, test);
         output.flush();

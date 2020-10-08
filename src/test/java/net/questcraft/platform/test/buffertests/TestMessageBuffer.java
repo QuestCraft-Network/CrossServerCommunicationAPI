@@ -11,11 +11,11 @@ public class TestMessageBuffer {
     public void testBuffer() {
         MessageBuffer buffer = new PacketMessageBuffer();
 
-        Packet packet = new KryoTestClass(1, 1, "");
-        Packet packet2 = new KryoTestClass(5, 1, "");
-        Packet packet3 = new KryoTestClass(56, 1, "");
-        Packet packet4 = new KryoTestClass(3124, 1, "");
-        Packet packet5 = new KryoTestClass(2, 1, "");
+        Packet packet = new KryoTestClass();
+        Packet packet2 = new KryoTestClass();
+        Packet packet3 = new KryoTestClass();
+        Packet packet4 = new KryoTestClass();
+        Packet packet5 = new KryoTestClass();
 
         buffer.write(packet);
         buffer.write(packet2);

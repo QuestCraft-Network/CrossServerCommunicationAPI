@@ -8,6 +8,7 @@ import net.questcraft.platform.handler.cscapi.communication.messagebuffer.Packet
 import net.questcraft.platform.handler.cscapi.error.*;
 import net.questcraft.platform.handler.cscapi.serializer.SerializationHandler;
 import net.questcraft.platform.handler.cscapi.serializer.byteserializer.ByteSerializationHandler;
+import net.questcraft.platform.handler.cscapi.serializer.serializers.PacketSerializer;
 import org.eclipse.jetty.websocket.api.Session;
 
 import java.io.IOException;
@@ -75,6 +76,11 @@ public abstract class SocketPipeline implements ChannelPipeline {
     public void onError(WebSocketException e) {
     }
 
+    /**
+     * Registers a packet with the ChannelHandler
+     *
+     * @param packet The packet that will be registered
+     */
     @Override
     public void registerPacket(Class<? extends Packet> packet) {
         this.handler.registerPacket(packet);
@@ -101,6 +107,10 @@ public abstract class SocketPipeline implements ChannelPipeline {
         return this.isConnected;
     }
 
+    @Override
+    public void registerSerializer(Class<?> cls, PacketSerializer serializer) {
+        this.handler.registerSerializer(cls, serializer);
+    }
 
     @Override
     public void sendMessage(Packet packet) throws IOException, CSCException {
@@ -109,6 +119,7 @@ public abstract class SocketPipeline implements ChannelPipeline {
             throw new UnregisteredPacketException("Packet type of " + packet.getClass().toString() + " is currently unregistered, please Register with SocketPipeline#registerPacket or ChannelPipeline#registerPacket");
 
         SerializationHandler<byte[]> serializer = new ByteSerializationHandler(packet.getClass());
+        serializer.registerSerializer(this.handler.getSerializers());
         byte[] byteArray = serializer.serialize(packet);
         ByteBuffer byteBuffer = ByteBuffer.wrap(byteArray);
         this.session.getRemote().sendBytes(byteBuffer);

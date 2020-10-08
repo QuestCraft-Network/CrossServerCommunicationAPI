@@ -2,17 +2,20 @@ package net.questcraft.platform.test;
 
 import net.questcraft.platform.handler.cscapi.annotations.SocketClassID;
 import net.questcraft.platform.handler.cscapi.communication.websocket.WSPacket;
+import net.questcraft.platform.test.apitests.SubClassTest;
 
 @SocketClassID("KyroTestClass")
 public class KryoTestClass implements WSPacket {
     private int intOne;
     private Integer integerTwo;
-    String string;
+    transient String string;
+    private SubClassTest test;
 
-    public KryoTestClass(int intOne, Integer integerTwo, String string) {
+    public KryoTestClass(int intOne, Integer integerTwo, String string, SubClassTest test) {
         this.intOne = intOne;
         this.integerTwo = integerTwo;
         this.string = string;
+        this.test = test;
     }
 
     public KryoTestClass() {
@@ -42,13 +45,22 @@ public class KryoTestClass implements WSPacket {
         this.string = string;
     }
 
+//    public SubClassTest getTest() {
+//        return test;
+//    }
+//
+//    public void setTest(SubClassTest test) {
+//        this.test = test;
+//    }
+
 
     @Override
     public String toString() {
-        return "KyroTestClass{" +
+        return "KryoTestClass{" +
                 "intOne=" + intOne +
                 ", integerTwo=" + integerTwo +
                 ", string='" + string + '\'' +
+                ", test=" + test +
                 '}';
     }
 }
