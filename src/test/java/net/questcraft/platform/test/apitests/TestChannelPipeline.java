@@ -26,13 +26,5 @@ public class TestChannelPipeline extends SocketPipeline {
     @Override
     public void onConnect(Session session) {
         super.onConnect(session);
-        System.out.println("Connected");
-//        try {
-////            this.sendMessage(new KryoTestClass(1, 5, "OK"));
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        } catch (CSCException e) {
-//            e.printStackTrace();
-//        }
     }
 }

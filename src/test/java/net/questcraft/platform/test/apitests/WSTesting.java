@@ -20,7 +20,7 @@ public class WSTesting {
             ChannelPipeline client = createClient();
             client.registerPacket(KryoTestClass.class);
             for (int i = 0; i < 100; i++) {
-                client.queueMessage(new KryoTestClass(1, 10, "HEY MAN"));
+                client.queueMessage(new KryoTestClass(1, 10, "HEY MAN", new SubClassTest("HI", 5)));
             }
 
         } catch (CSCException | Exception e) {

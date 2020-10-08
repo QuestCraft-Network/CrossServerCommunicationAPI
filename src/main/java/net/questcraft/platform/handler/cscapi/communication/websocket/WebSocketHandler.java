@@ -20,6 +20,7 @@ public abstract class WebSocketHandler extends ChannelHandler {
         byte[] bytes = (byte[]) packet;
 
         DeserializationHandler serializationHandler = new ByteDeserializationHandler();
+        serializationHandler.registerSerializer(this.serializers);
         Packet wsPacket = serializationHandler.deserialize(bytes, this.registeredClasses);
 
         pipeline.onMessage(wsPacket);

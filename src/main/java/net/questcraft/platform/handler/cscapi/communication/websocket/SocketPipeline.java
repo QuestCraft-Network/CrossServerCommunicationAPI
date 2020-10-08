@@ -8,19 +8,21 @@ import net.questcraft.platform.handler.cscapi.communication.messagebuffer.Packet
 import net.questcraft.platform.handler.cscapi.error.*;
 import net.questcraft.platform.handler.cscapi.serializer.SerializationHandler;
 import net.questcraft.platform.handler.cscapi.serializer.byteserializer.ByteSerializationHandler;
+import net.questcraft.platform.handler.cscapi.serializer.serializers.PacketSerializer;
 import org.eclipse.jetty.websocket.api.Session;
 
 import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.nio.ByteBuffer;
+import java.util.logging.SocketHandler;
 
 public abstract class SocketPipeline implements ChannelPipeline {
     private final String path;
     private Session session;
 
     private final MessageBuffer queueBuffer;
-    private final ChannelHandler handler;
+    private final WebSocketHandler handler;
 
     private boolean isConnected = false;
     private boolean autoReconnect;
@@ -49,6 +51,13 @@ public abstract class SocketPipeline implements ChannelPipeline {
      */
     public void onClose(int statusCode, String reason) {
         this.isConnected = false;
+        if (this.autoReconnect) {
+            try {
+                this.handler.reconnectPipeline(this);
+            } catch (Exception e) {
+                throw new RuntimeException("Failed to reconnect broken pipeline, Error: " + e.getMessage());
+            }
+        }
     }
 
     /**
@@ -75,6 +84,11 @@ public abstract class SocketPipeline implements ChannelPipeline {
     public void onError(WebSocketException e) {
     }
 
+    /**
+     * Registers a packet with the ChannelHandler
+     *
+     * @param packet The packet that will be registered
+     */
     @Override
     public void registerPacket(Class<? extends Packet> packet) {
         this.handler.registerPacket(packet);
@@ -99,8 +113,13 @@ public abstract class SocketPipeline implements ChannelPipeline {
 
     public boolean isConnected() {
         return this.isConnected;
+
     }
 
+    @Override
+    public void registerSerializer(Class<?> cls, PacketSerializer serializer) {
+        this.handler.registerSerializer(cls, serializer);
+    }
 
     @Override
     public void sendMessage(Packet packet) throws IOException, CSCException {
@@ -109,6 +128,7 @@ public abstract class SocketPipeline implements ChannelPipeline {
             throw new UnregisteredPacketException("Packet type of " + packet.getClass().toString() + " is currently unregistered, please Register with SocketPipeline#registerPacket or ChannelPipeline#registerPacket");
 
         SerializationHandler<byte[]> serializer = new ByteSerializationHandler(packet.getClass());
+        serializer.registerSerializer(this.handler.getSerializers());
         byte[] byteArray = serializer.serialize(packet);
         ByteBuffer byteBuffer = ByteBuffer.wrap(byteArray);
         this.session.getRemote().sendBytes(byteBuffer);
@@ -154,7 +174,7 @@ public abstract class SocketPipeline implements ChannelPipeline {
     public static class Builder extends ChannelPipeline.Builder {
         private final String path;
         private boolean autoReconnect;
-        private ChannelHandler handler;
+        private WebSocketHandler handler;
 
         public Builder(String path, Class<? extends ChannelPipeline> pipeCls) {
             super(pipeCls);
@@ -168,7 +188,8 @@ public abstract class SocketPipeline implements ChannelPipeline {
                     throw new IllegalArgumentException("Class is not of type SocketPipeline, To be registered as a Pipeline this must be the case");
                 Class<? extends SocketPipeline> socketCls = (Class<? extends SocketPipeline>) this.pipeCls;
 
-                this.handler = handler;
+                if (!(handler instanceof WebSocketHandler)) throw new IllegalArgumentException("ChannelHandler must be of type WebSocketHandler");
+                this.handler = (WebSocketHandler) handler;
 
                 Constructor<? extends SocketPipeline> constructor = socketCls.getConstructor(Builder.class);
                 SocketPipeline socketPipeline = constructor.newInstance(this);

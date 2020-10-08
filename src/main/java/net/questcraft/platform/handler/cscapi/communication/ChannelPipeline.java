@@ -2,6 +2,7 @@ package net.questcraft.platform.handler.cscapi.communication;
 
 import net.questcraft.platform.handler.cscapi.error.CSCException;
 import net.questcraft.platform.handler.cscapi.error.CSCInstantiationException;
+import net.questcraft.platform.handler.cscapi.serializer.serializers.PacketSerializer;
 
 import java.io.IOException;
 
@@ -43,6 +44,8 @@ public interface ChannelPipeline {
      * @param packet The packet that will be registered
      */
     void registerPacket(Class<? extends Packet> packet);
+
+    void registerSerializer(Class<?> cls, PacketSerializer serializer);
 
     abstract class Builder {
         protected final Class<? extends ChannelPipeline> pipeCls;
