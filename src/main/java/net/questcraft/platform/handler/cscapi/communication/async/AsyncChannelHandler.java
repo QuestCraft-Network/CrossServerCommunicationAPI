@@ -1,5 +1,6 @@
-package net.questcraft.platform.handler.cscapi.communication;
+package net.questcraft.platform.handler.cscapi.communication.async;
 
+import net.questcraft.platform.handler.cscapi.communication.CommunicationHandler;
 import net.questcraft.platform.handler.cscapi.error.CSCException;
 import net.questcraft.platform.handler.cscapi.error.CSCInstantiationException;
 import net.questcraft.platform.handler.cscapi.serializer.serializers.PacketSerializer;
@@ -7,7 +8,7 @@ import net.questcraft.platform.handler.cscapi.serializer.serializers.PacketSeria
 import java.io.IOException;
 import java.util.*;
 
-public abstract class ChannelHandler {
+public abstract class AsyncChannelHandler implements CommunicationHandler {
     protected final List<ChannelPipeline> pipelines;
     protected final Set<Class<?>> registeredClasses;
     protected final Map<Class<?>, PacketSerializer> serializers;
@@ -16,7 +17,7 @@ public abstract class ChannelHandler {
      * Constructs a new ChannelHandler and initializes final member variables.
      * MUST Have an empty constructor in any extensible child of ChannelHandler
      */
-    public ChannelHandler() {
+    public AsyncChannelHandler() {
         this.pipelines = new ArrayList<>();
         this.registeredClasses = new HashSet<>();
         this.serializers = new HashMap<>();

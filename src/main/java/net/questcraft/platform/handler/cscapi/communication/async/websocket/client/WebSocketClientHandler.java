@@ -1,9 +1,9 @@
-package net.questcraft.platform.handler.cscapi.communication.websocket.client;
+package net.questcraft.platform.handler.cscapi.communication.async.websocket.client;
 
-import net.questcraft.platform.handler.cscapi.communication.ChannelPipeline;
-import net.questcraft.platform.handler.cscapi.communication.websocket.SocketPipeline;
-import net.questcraft.platform.handler.cscapi.communication.websocket.SocketPipelineHandler;
-import net.questcraft.platform.handler.cscapi.communication.websocket.WebSocketHandler;
+import net.questcraft.platform.handler.cscapi.communication.async.ChannelPipeline;
+import net.questcraft.platform.handler.cscapi.communication.async.websocket.SocketPipeline;
+import net.questcraft.platform.handler.cscapi.communication.async.websocket.SocketPipelineHandler;
+import net.questcraft.platform.handler.cscapi.communication.async.websocket.WebSocketHandler;
 import net.questcraft.platform.handler.cscapi.error.CSCInstantiationException;
 import org.eclipse.jetty.websocket.client.ClientUpgradeRequest;
 import org.eclipse.jetty.websocket.client.WebSocketClient;

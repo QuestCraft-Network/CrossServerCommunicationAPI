@@ -1,7 +1,7 @@
 package net.questcraft.platform.test.apitests;
 
-import net.questcraft.platform.handler.cscapi.communication.Packet;
-import net.questcraft.platform.handler.cscapi.communication.websocket.SocketPipeline;
+import net.questcraft.platform.handler.cscapi.communication.async.Packet;
+import net.questcraft.platform.handler.cscapi.communication.async.websocket.SocketPipeline;
 import org.eclipse.jetty.websocket.api.Session;
 
 public class TestChannelPipeline extends SocketPipeline {

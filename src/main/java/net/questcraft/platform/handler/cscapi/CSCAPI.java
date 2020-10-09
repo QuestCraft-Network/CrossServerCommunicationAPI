@@ -1,6 +1,6 @@
 package net.questcraft.platform.handler.cscapi;
 
-import net.questcraft.platform.handler.cscapi.communication.ChannelHandler;
+import net.questcraft.platform.handler.cscapi.communication.CommunicationHandler;
 import net.questcraft.platform.handler.cscapi.communication.channeltypes.ChannelType;
 import net.questcraft.platform.handler.cscapi.error.CSCException;
 import net.questcraft.platform.handler.cscapi.error.CSCInstantiationException;
@@ -13,12 +13,13 @@ import java.util.Map;
 public class CSCAPI {
     //TODO Redo this, maybe as a singleton interface with some implementation, or a abstract class... Just make this a utilities class for keeping the singleton, and have something else that deals with the actual implementation.
 
-    private final Map<ChannelType, ChannelHandler> channelHandlers;
+    private final Map<ChannelType<?>, CommunicationHandler> channelHandlers;
     private static CSCAPI api;
 
     private CSCAPI() {
         this.channelHandlers = new HashMap<>();
     }
+
 
     /**
      * Creates and retrieves the specified ChannelHandler
@@ -27,11 +28,11 @@ public class CSCAPI {
      * @return The ChannelHandler that was either instantiated or retrieved from the Map
      * @throws CSCException Throws if unable to instantiate the ChannelHandler
      */
-    public ChannelHandler getChannelHandler(ChannelType type) throws CSCException {
+    public <T extends CommunicationHandler> CommunicationHandler getChannelHandler(ChannelType<T> type) throws CSCException {
         try {
             if (!this.channelHandlers.containsKey(type)) this.channelHandlers.put(type, this.createFromType(type));
             return this.channelHandlers.get(type);
-        } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException | InstantiationException e) {
+        } catch (ReflectiveOperationException e) {
             throw new CSCInstantiationException("Unable to instantiate requested ChannelHandler Type, Error : " + e.getMessage());
         }
     }
@@ -46,22 +47,21 @@ public class CSCAPI {
      * @throws InvocationTargetException throws if the constructor cant create a new Instance
      * @throws InstantiationException throws if the constructor cant create a new Instance
      */
-    private ChannelHandler createFromType(ChannelType type) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
-        Class<? extends ChannelHandler> clsType = type.getClsType();
-        Constructor<? extends ChannelHandler> channelConstructor = clsType.getConstructor();
-
-        ChannelHandler handler = channelConstructor.newInstance();
-        return handler;
+    private <T extends CommunicationHandler> T createFromType(ChannelType<T> type) throws ReflectiveOperationException {
+        Class<T> clsType = type.getClsType();
+        Constructor<T> channelConstructor = clsType.getConstructor();
+        return channelConstructor.newInstance();
     }
 
     /**
-     * Returns the singleton CSAPI
+     * Returns the singleton CSCAPI
      *
      * @return The singleton CSCAPI
      */
-    public static synchronized CSCAPI getAPI() {
-        if (api == null) api = new CSCAPI();
-        return api;
+    public static CSCAPI getAPI() {
+        synchronized (CSCAPI.class) {
+            if (api == null) api = new CSCAPI();
+            return api;
+        }
     }
-
 }

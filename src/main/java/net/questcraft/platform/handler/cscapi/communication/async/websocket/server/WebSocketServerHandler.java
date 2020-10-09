@@ -1,9 +1,9 @@
-package net.questcraft.platform.handler.cscapi.communication.websocket.server;
+package net.questcraft.platform.handler.cscapi.communication.async.websocket.server;
 
-import net.questcraft.platform.handler.cscapi.communication.ChannelPipeline;
-import net.questcraft.platform.handler.cscapi.communication.websocket.SocketPipeline;
-import net.questcraft.platform.handler.cscapi.communication.websocket.SocketPipelineHandler;
-import net.questcraft.platform.handler.cscapi.communication.websocket.WebSocketHandler;
+import net.questcraft.platform.handler.cscapi.communication.async.ChannelPipeline;
+import net.questcraft.platform.handler.cscapi.communication.async.websocket.SocketPipeline;
+import net.questcraft.platform.handler.cscapi.communication.async.websocket.SocketPipelineHandler;
+import net.questcraft.platform.handler.cscapi.communication.async.websocket.WebSocketHandler;
 import net.questcraft.platform.handler.cscapi.error.CSCInstantiationException;
 import spark.Spark;
 

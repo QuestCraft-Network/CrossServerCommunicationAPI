@@ -2,7 +2,7 @@ package net.questcraft.platform.handler.cscapi.serializer.byteserializer;
 
 import com.esotericsoftware.kryo.io.Input;
 import com.sun.xml.internal.ws.util.ByteArrayBuffer;
-import net.questcraft.platform.handler.cscapi.communication.Packet;
+import net.questcraft.platform.handler.cscapi.communication.async.Packet;
 import net.questcraft.platform.handler.cscapi.error.CSCException;
 import net.questcraft.platform.handler.cscapi.error.InvalidClassIDDescriptor;
 import net.questcraft.platform.handler.cscapi.serializer.DeserializationHandler;
@@ -10,8 +10,6 @@ import net.questcraft.platform.handler.cscapi.serializer.serializers.BytePacketS
 import net.questcraft.platform.handler.cscapi.serializer.serializers.PacketSerializer;
 
 import java.io.IOException;
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
 import java.util.Map;
 import java.util.Set;
 

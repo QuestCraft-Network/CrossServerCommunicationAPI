@@ -1,4 +1,4 @@
-package net.questcraft.platform.handler.cscapi.communication;
+package net.questcraft.platform.handler.cscapi.communication.async;
 
 /**
  * Indicates that the Specified Object is a Communication

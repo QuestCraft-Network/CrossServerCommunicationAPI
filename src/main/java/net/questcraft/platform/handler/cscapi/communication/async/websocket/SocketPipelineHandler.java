@@ -1,4 +1,4 @@
-package net.questcraft.platform.handler.cscapi.communication.websocket;
+package net.questcraft.platform.handler.cscapi.communication.async.websocket;
 
 
 import net.questcraft.platform.handler.cscapi.error.CSCException;

@@ -1,10 +1,10 @@
 package net.questcraft.platform.test;
 
-import net.questcraft.platform.handler.cscapi.communication.Packet;
+import net.questcraft.platform.handler.cscapi.communication.async.Packet;
 import net.questcraft.platform.handler.cscapi.error.CSCException;
 import net.questcraft.platform.handler.cscapi.serializer.DeserializationHandler;
 import net.questcraft.platform.handler.cscapi.serializer.SerializationHandler;
-import net.questcraft.platform.handler.cscapi.communication.websocket.WSPacket;
+import net.questcraft.platform.handler.cscapi.communication.async.websocket.WSPacket;
 import net.questcraft.platform.handler.cscapi.serializer.byteserializer.ByteDeserializationHandler;
 import net.questcraft.platform.handler.cscapi.serializer.byteserializer.ByteSerializationHandler;
 import net.questcraft.platform.test.apitests.SubClassTest;

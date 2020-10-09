@@ -1,6 +1,6 @@
-package net.questcraft.platform.handler.cscapi.communication.websocket;
+package net.questcraft.platform.handler.cscapi.communication.async.websocket;
 
-import net.questcraft.platform.handler.cscapi.communication.Packet;
+import net.questcraft.platform.handler.cscapi.communication.async.Packet;
 
 /**
  * Indicates that a Class is Serializable for

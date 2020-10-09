@@ -1,7 +1,7 @@
 package net.questcraft.platform.test;
 
 import net.questcraft.platform.handler.cscapi.annotations.SocketClassID;
-import net.questcraft.platform.handler.cscapi.communication.websocket.WSPacket;
+import net.questcraft.platform.handler.cscapi.communication.async.websocket.WSPacket;
 import net.questcraft.platform.test.apitests.SubClassTest;
 
 @SocketClassID("KyroTestClass")

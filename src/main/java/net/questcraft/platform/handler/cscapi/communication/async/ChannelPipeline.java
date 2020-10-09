@@ -1,4 +1,4 @@
-package net.questcraft.platform.handler.cscapi.communication;
+package net.questcraft.platform.handler.cscapi.communication.async;
 
 import net.questcraft.platform.handler.cscapi.error.CSCException;
 import net.questcraft.platform.handler.cscapi.error.CSCInstantiationException;
@@ -54,7 +54,7 @@ public interface ChannelPipeline {
             this.pipeCls = pipeCls;
         }
 
-        public abstract ChannelPipeline build(ChannelHandler handler) throws CSCInstantiationException;
+        public abstract ChannelPipeline build(AsyncChannelHandler handler) throws CSCInstantiationException;
 
         public boolean isProductInstanceOf(Class<?> cls) {
             return  (this.pipeCls.isAssignableFrom(cls));

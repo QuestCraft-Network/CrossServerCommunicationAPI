@@ -1,8 +1,8 @@
-package net.questcraft.platform.handler.cscapi.communication.websocket;
+package net.questcraft.platform.handler.cscapi.communication.async.websocket;
 
-import net.questcraft.platform.handler.cscapi.communication.ChannelHandler;
-import net.questcraft.platform.handler.cscapi.communication.ChannelPipeline;
-import net.questcraft.platform.handler.cscapi.communication.Packet;
+import net.questcraft.platform.handler.cscapi.communication.async.AsyncChannelHandler;
+import net.questcraft.platform.handler.cscapi.communication.async.ChannelPipeline;
+import net.questcraft.platform.handler.cscapi.communication.async.Packet;
 import net.questcraft.platform.handler.cscapi.error.CSCException;
 import net.questcraft.platform.handler.cscapi.error.WebSocketException;
 import net.questcraft.platform.handler.cscapi.serializer.DeserializationHandler;
@@ -11,7 +11,7 @@ import org.eclipse.jetty.websocket.api.Session;
 
 import java.io.IOException;
 
-public abstract class WebSocketHandler extends ChannelHandler {
+public abstract class WebSocketHandler extends AsyncChannelHandler {
     protected int RECONNECT_DELAY = 10;
 
     @Override

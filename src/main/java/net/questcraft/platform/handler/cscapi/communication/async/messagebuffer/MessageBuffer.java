@@ -1,6 +1,6 @@
-package net.questcraft.platform.handler.cscapi.communication.messagebuffer;
+package net.questcraft.platform.handler.cscapi.communication.async.messagebuffer;
 
-import net.questcraft.platform.handler.cscapi.communication.Packet;
+import net.questcraft.platform.handler.cscapi.communication.async.Packet;
 
 public abstract class MessageBuffer {
     //TODO create a MessageBuffer#flush() method for flushing contents of the buffer to a InputStream or Packet[]

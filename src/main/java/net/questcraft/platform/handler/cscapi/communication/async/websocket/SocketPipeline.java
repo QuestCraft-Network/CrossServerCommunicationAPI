@@ -1,10 +1,10 @@
-package net.questcraft.platform.handler.cscapi.communication.websocket;
+package net.questcraft.platform.handler.cscapi.communication.async.websocket;
 
-import net.questcraft.platform.handler.cscapi.communication.ChannelHandler;
-import net.questcraft.platform.handler.cscapi.communication.ChannelPipeline;
-import net.questcraft.platform.handler.cscapi.communication.Packet;
-import net.questcraft.platform.handler.cscapi.communication.messagebuffer.MessageBuffer;
-import net.questcraft.platform.handler.cscapi.communication.messagebuffer.PacketMessageBuffer;
+import net.questcraft.platform.handler.cscapi.communication.async.AsyncChannelHandler;
+import net.questcraft.platform.handler.cscapi.communication.async.ChannelPipeline;
+import net.questcraft.platform.handler.cscapi.communication.async.Packet;
+import net.questcraft.platform.handler.cscapi.communication.async.messagebuffer.MessageBuffer;
+import net.questcraft.platform.handler.cscapi.communication.async.messagebuffer.PacketMessageBuffer;
 import net.questcraft.platform.handler.cscapi.error.*;
 import net.questcraft.platform.handler.cscapi.serializer.SerializationHandler;
 import net.questcraft.platform.handler.cscapi.serializer.byteserializer.ByteSerializationHandler;
@@ -15,7 +15,6 @@ import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.nio.ByteBuffer;
-import java.util.logging.SocketHandler;
 
 public abstract class SocketPipeline implements ChannelPipeline {
     private final String path;
@@ -26,7 +25,6 @@ public abstract class SocketPipeline implements ChannelPipeline {
 
     private boolean isConnected = false;
     private boolean autoReconnect;
-
 
     public SocketPipeline(Builder builder) {
         this.path = builder.path;
@@ -182,7 +180,7 @@ public abstract class SocketPipeline implements ChannelPipeline {
         }
 
         @Override
-        public SocketPipeline build(ChannelHandler handler) throws CSCInstantiationException {
+        public SocketPipeline build(AsyncChannelHandler handler) throws CSCInstantiationException {
             try {
                 if (!SocketPipeline.class.isAssignableFrom(this.pipeCls))
                     throw new IllegalArgumentException("Class is not of type SocketPipeline, To be registered as a Pipeline this must be the case");

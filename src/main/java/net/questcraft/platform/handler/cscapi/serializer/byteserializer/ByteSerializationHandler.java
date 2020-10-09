@@ -2,7 +2,7 @@ package net.questcraft.platform.handler.cscapi.serializer.byteserializer;
 
 import com.esotericsoftware.kryo.io.Output;
 import com.sun.xml.internal.ws.util.ByteArrayBuffer;
-import net.questcraft.platform.handler.cscapi.communication.Packet;
+import net.questcraft.platform.handler.cscapi.communication.async.Packet;
 import net.questcraft.platform.handler.cscapi.error.CSCException;
 import net.questcraft.platform.handler.cscapi.serializer.SerializationHandler;
 import net.questcraft.platform.handler.cscapi.serializer.serializers.BytePacketSerializer;
