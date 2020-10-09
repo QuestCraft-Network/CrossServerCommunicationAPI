@@ -7,11 +7,20 @@ Development : Take a clone of the branch dev then and your all set
 
 Production : Take a clone of the Trunk(Master)
 ```xml
-  <dependancy>
-    <groupId>net.questcraft</groupId>
-    <artifactId>CrossServerCommunicationAPI</artifactId>
-    <version>VERSION</version>
-  </dependancy>
+   <repositories>
+        <repository>
+            <id>cscapi-repo</id>
+            <url>https://github.com/QuestCraft-Network/CrossServerCommunicationAPI?raw=true</url>
+        </repository>
+    </repositories>
+
+    <dependencies>
+        <dependency>
+            <groupId>net.questcraft</groupId>
+            <artifactId>CrossServerCommunicationAPI</artifactId>
+            <version>VERSION</version>
+        </dependency>
+   </dependencies>
 ```
 Latest Version : 1.0-SNAPSHOT
 
