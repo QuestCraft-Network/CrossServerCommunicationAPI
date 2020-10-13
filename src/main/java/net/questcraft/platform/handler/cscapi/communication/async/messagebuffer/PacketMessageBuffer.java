@@ -1,6 +1,6 @@
 package net.questcraft.platform.handler.cscapi.communication.async.messagebuffer;
 
-import net.questcraft.platform.handler.cscapi.communication.async.Packet;
+import net.questcraft.platform.handler.cscapi.communication.Packet;
 
 
 public class PacketMessageBuffer extends MessageBuffer {

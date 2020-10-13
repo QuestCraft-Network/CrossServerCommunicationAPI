@@ -1,13 +1,13 @@
 package net.questcraft.platform.test;
 
-import net.questcraft.platform.handler.cscapi.communication.async.Packet;
+import net.questcraft.platform.handler.cscapi.communication.Packet;
+import net.questcraft.platform.handler.cscapi.communication.async.websocket.WSPacket;
 import net.questcraft.platform.handler.cscapi.error.CSCException;
 import net.questcraft.platform.handler.cscapi.serializer.DeserializationHandler;
 import net.questcraft.platform.handler.cscapi.serializer.SerializationHandler;
-import net.questcraft.platform.handler.cscapi.communication.async.websocket.WSPacket;
 import net.questcraft.platform.handler.cscapi.serializer.byteserializer.ByteDeserializationHandler;
 import net.questcraft.platform.handler.cscapi.serializer.byteserializer.ByteSerializationHandler;
-import net.questcraft.platform.test.apitests.SubClassTest;
+import net.questcraft.platform.test.apitests.ws.SubClassTest;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -24,7 +24,7 @@ public class SerializationTest {
 
     private byte[] serializeToBytes() throws IOException, CSCException {
         WSPacket packet = new KryoTestClass();
-        SerializationHandler<byte[]> serializer = new ByteSerializationHandler(packet.getClass());
+        SerializationHandler serializer = new ByteSerializationHandler();
 
         byte[] byteArray = serializer.serialize(packet);
         return byteArray;
@@ -34,7 +34,7 @@ public class SerializationTest {
     public void deserializeFromBytes() throws IOException, CSCException {
         byte[] bytes = serializeToBytes();
         DeserializationHandler handler = new ByteDeserializationHandler();
-        Set<Class<?>> registeredClasses = new HashSet<Class<?>>();
+        Set<Class<? extends Packet>> registeredClasses = new HashSet<>();
 
         registeredClasses.add(KryoTestClass.class);
 

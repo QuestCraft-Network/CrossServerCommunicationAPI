@@ -1,13 +1,11 @@
 package net.questcraft.platform.handler.cscapi.communication.async.websocket;
 
-import net.questcraft.platform.handler.cscapi.communication.async.AsyncChannelHandler;
-import net.questcraft.platform.handler.cscapi.communication.async.ChannelPipeline;
-import net.questcraft.platform.handler.cscapi.communication.async.Packet;
+import net.questcraft.platform.handler.cscapi.communication.CommunicationHandler;
+import net.questcraft.platform.handler.cscapi.communication.Packet;
+import net.questcraft.platform.handler.cscapi.communication.async.AsyncChannelPipeline;
 import net.questcraft.platform.handler.cscapi.communication.async.messagebuffer.MessageBuffer;
 import net.questcraft.platform.handler.cscapi.communication.async.messagebuffer.PacketMessageBuffer;
 import net.questcraft.platform.handler.cscapi.error.*;
-import net.questcraft.platform.handler.cscapi.serializer.SerializationHandler;
-import net.questcraft.platform.handler.cscapi.serializer.byteserializer.ByteSerializationHandler;
 import net.questcraft.platform.handler.cscapi.serializer.serializers.PacketSerializer;
 import org.eclipse.jetty.websocket.api.Session;
 
@@ -16,12 +14,12 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.nio.ByteBuffer;
 
-public abstract class SocketPipeline implements ChannelPipeline {
+public abstract class SocketPipeline implements AsyncChannelPipeline {
     private final String path;
     private Session session;
 
     private final MessageBuffer queueBuffer;
-    private final WebSocketHandler handler;
+    private final SocketChannelHandler handler;
 
     private boolean isConnected = false;
     private boolean autoReconnect;
@@ -64,8 +62,8 @@ public abstract class SocketPipeline implements ChannelPipeline {
      * @param session The WebSocket Session after connected
      */
     public void onConnect(Session session) {
-        this.isConnected = true;
         this.session = session;
+        this.isConnected = true;
 
         try {
             this.sendQueuedMessages();
@@ -111,23 +109,24 @@ public abstract class SocketPipeline implements ChannelPipeline {
 
     public boolean isConnected() {
         return this.isConnected;
-
     }
 
     @Override
-    public void registerSerializer(Class<?> cls, PacketSerializer serializer) {
+    public <T> void registerSerializer(Class<T> cls, PacketSerializer<T> serializer) {
         this.handler.registerSerializer(cls, serializer);
     }
 
     @Override
     public void sendMessage(Packet packet) throws IOException, CSCException {
-        if (!this.isConnected) this.queueBuffer.write(packet);
+        if (!this.isConnected) {
+            this.queueBuffer.write(packet);
+            return;
+        }
+
         if (!this.handler.isPacketRegistered(packet.getClass()))
             throw new UnregisteredPacketException("Packet type of " + packet.getClass().toString() + " is currently unregistered, please Register with SocketPipeline#registerPacket or ChannelPipeline#registerPacket");
 
-        SerializationHandler<byte[]> serializer = new ByteSerializationHandler(packet.getClass());
-        serializer.registerSerializer(this.handler.getSerializers());
-        byte[] byteArray = serializer.serialize(packet);
+        byte[] byteArray = this.handler.getSerializationHandler().serialize(packet);
         ByteBuffer byteBuffer = ByteBuffer.wrap(byteArray);
         this.session.getRemote().sendBytes(byteBuffer);
     }
@@ -169,35 +168,33 @@ public abstract class SocketPipeline implements ChannelPipeline {
      *
      * @author Chestly
      */
-    public static class Builder extends ChannelPipeline.Builder {
+    public static class Builder<T extends SocketPipeline> extends AsyncChannelPipeline.Builder<T> {
         private final String path;
         private boolean autoReconnect;
-        private WebSocketHandler handler;
+        private SocketChannelHandler handler;
 
-        public Builder(String path, Class<? extends ChannelPipeline> pipeCls) {
+        public Builder(String path, Class<T> pipeCls) {
             super(pipeCls);
             this.path = path;
         }
 
         @Override
-        public SocketPipeline build(AsyncChannelHandler handler) throws CSCInstantiationException {
+        public T build(CommunicationHandler handler) throws CSCInstantiationException {
             try {
                 if (!SocketPipeline.class.isAssignableFrom(this.pipeCls))
                     throw new IllegalArgumentException("Class is not of type SocketPipeline, To be registered as a Pipeline this must be the case");
-                Class<? extends SocketPipeline> socketCls = (Class<? extends SocketPipeline>) this.pipeCls;
 
-                if (!(handler instanceof WebSocketHandler)) throw new IllegalArgumentException("ChannelHandler must be of type WebSocketHandler");
-                this.handler = (WebSocketHandler) handler;
+                if (!(handler instanceof SocketChannelHandler)) throw new IllegalArgumentException("ChannelHandler must be of type WebSocketHandler");
+                this.handler = (SocketChannelHandler) handler;
 
-                Constructor<? extends SocketPipeline> constructor = socketCls.getConstructor(Builder.class);
-                SocketPipeline socketPipeline = constructor.newInstance(this);
-                return socketPipeline;
+                Constructor<T> constructor = this.pipeCls.getConstructor(Builder.class);
+                return constructor.newInstance(this);
             } catch (NoSuchMethodException | IllegalAccessException | InstantiationException | InvocationTargetException e) {
                 throw new CSCInstantiationException("Failed to instantiate SocketPipeline of type : " + this.pipeCls.toString());
             }
         }
 
-        public Builder autoReconnect(boolean reconnect) {
+        public Builder<T> autoReconnect(boolean reconnect) {
             this.autoReconnect = reconnect;
             return this;
         }

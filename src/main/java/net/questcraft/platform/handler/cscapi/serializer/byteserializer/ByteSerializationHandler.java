@@ -2,10 +2,10 @@ package net.questcraft.platform.handler.cscapi.serializer.byteserializer;
 
 import com.esotericsoftware.kryo.io.Output;
 import com.sun.xml.internal.ws.util.ByteArrayBuffer;
-import net.questcraft.platform.handler.cscapi.communication.async.Packet;
+import net.questcraft.platform.handler.cscapi.communication.Packet;
 import net.questcraft.platform.handler.cscapi.error.CSCException;
 import net.questcraft.platform.handler.cscapi.serializer.SerializationHandler;
-import net.questcraft.platform.handler.cscapi.serializer.serializers.BytePacketSerializer;
+import net.questcraft.platform.handler.cscapi.serializer.serializers.byteserializers.BytePacketSerializer;
 import net.questcraft.platform.handler.cscapi.serializer.serializers.PacketSerializer;
 
 import java.io.ByteArrayOutputStream;
@@ -14,14 +14,9 @@ import java.util.Arrays;
 import java.util.Map;
 
 
-public class ByteSerializationHandler<T> extends ByteSerialization implements SerializationHandler<T> {
-    private final Class<?> kryoClass;
+public class ByteSerializationHandler extends ByteSerialization implements SerializationHandler {
 
-    public ByteSerializationHandler(Class<?> kryoClass) {
-        this.kryoClass = kryoClass;
-    }
-
-    public T serialize(Packet packet) throws IOException, CSCException {
+    public byte[] serialize(Packet packet) throws IOException, CSCException {
         ByteArrayBuffer byteBuffer = new ByteArrayBuffer(1);
 
         byteBuffer.write(this.getSerializationKey(packet.getClass()).getBytes());
@@ -29,15 +24,15 @@ public class ByteSerializationHandler<T> extends ByteSerialization implements Se
 
         Output output = new Output(new ByteArrayOutputStream(1));
 
-        kryo.register(kryoClass);
-        this.registerMemberVariables(kryoClass);
+        kryo.register(packet.getClass());
+        this.registerMemberVariables(packet.getClass());
         this.kryo.writeObject(output, packet);
         output.flush();
         byteBuffer.write(this.trimByteArray(output.getBuffer()));
         output.close();
 
 
-        return (T) byteBuffer.getRawData();
+        return byteBuffer.getRawData();
     }
 
     private byte[] trimByteArray(byte[] array) {
@@ -48,18 +43,22 @@ public class ByteSerializationHandler<T> extends ByteSerialization implements Se
         throw new IllegalArgumentException("Array cannot be of null objects");
     }
 
-    public void registerSerializer(Class<?> type, PacketSerializer serializer) throws IllegalArgumentException {
-        if (!(serializer instanceof BytePacketSerializer)) throw new IllegalArgumentException("Type must be of BytePacketSerializer");
-        BytePacketSerializer packetSerializer = (BytePacketSerializer) serializer;
-        this.kryo.register(type, packetSerializer);
+
+    @Override
+    public <T> void registerSerializer(Class<T> type, PacketSerializer<T> serializer) throws IllegalArgumentException {
+        register(type, serializer);
     }
 
     @Override
-    public void registerSerializer(Map<Class<?>, PacketSerializer> serializers) throws IllegalArgumentException {
-        for (Class<?> cls : serializers.keySet()) {
-            if (!(serializers.get(cls) instanceof BytePacketSerializer)) throw new IllegalArgumentException("Type must be of BytePacketSerializer");
-            BytePacketSerializer packetSerializer = (BytePacketSerializer) serializers.get(cls);
-            this.kryo.register(cls, packetSerializer);
+    public <T> void registerSerializer(Map<Class<T>, PacketSerializer<T>> serializers) throws IllegalArgumentException {
+        for (Class<T> cls : serializers.keySet()) {
+           register(cls, serializers.get(cls));
         }
+    }
+
+    private <T> void register(Class<T> cls, PacketSerializer<T> serializer) {
+        if (!(serializer instanceof BytePacketSerializer)) throw new IllegalArgumentException("Type must be of BytePacketSerializer");
+        BytePacketSerializer<T> packetSerializer = (BytePacketSerializer<T>) serializer;
+        this.kryo.register(cls, packetSerializer);
     }
 }

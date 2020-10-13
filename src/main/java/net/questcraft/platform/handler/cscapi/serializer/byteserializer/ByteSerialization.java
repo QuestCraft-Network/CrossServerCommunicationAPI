@@ -24,7 +24,7 @@ public abstract class ByteSerialization {
     }
 
     protected String getSerializationKey(Class<?> cls) throws InvalidClassIDDescriptor {
-        if (!this.hasAnnotation(cls, TYPE_ID_ANNOTATION)) throw new IllegalArgumentException("Given Class has no annotation present for net/questcraft/platform/handler/cscapi/annotations/ClassID.java");
+        if (!this.hasAnnotation(cls, TYPE_ID_ANNOTATION)) throw new IllegalArgumentException("Given Class : " + cls.toString() +" has no annotation present for net/questcraft/platform/handler/cscapi/annotations/SocketClassID.java");
 
         SocketClassID classID = cls.getAnnotation(TYPE_ID_ANNOTATION);
 

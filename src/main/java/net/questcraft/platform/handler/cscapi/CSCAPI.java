@@ -11,8 +11,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class CSCAPI {
-    //TODO Redo this, maybe as a singleton interface with some implementation, or a abstract class... Just make this a utilities class for keeping the singleton, and have something else that deals with the actual implementation.
-
     private final Map<ChannelType<?>, CommunicationHandler> channelHandlers;
     private static CSCAPI api;
 
@@ -28,10 +26,11 @@ public class CSCAPI {
      * @return The ChannelHandler that was either instantiated or retrieved from the Map
      * @throws CSCException Throws if unable to instantiate the ChannelHandler
      */
-    public <T extends CommunicationHandler> CommunicationHandler getChannelHandler(ChannelType<T> type) throws CSCException {
+    @SuppressWarnings("unchecked")
+    public <T extends CommunicationHandler> T getChannelHandler(ChannelType<T> type) throws CSCException {
         try {
             if (!this.channelHandlers.containsKey(type)) this.channelHandlers.put(type, this.createFromType(type));
-            return this.channelHandlers.get(type);
+            return (T) this.channelHandlers.get(type); //Always true since <T extends CommunicationHandler> and Value will be of CommunicationHandler
         } catch (ReflectiveOperationException e) {
             throw new CSCInstantiationException("Unable to instantiate requested ChannelHandler Type, Error : " + e.getMessage());
         }

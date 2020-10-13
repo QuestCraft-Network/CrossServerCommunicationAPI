@@ -1,6 +1,6 @@
 package net.questcraft.platform.test.buffertests;
 
-import net.questcraft.platform.handler.cscapi.communication.async.Packet;
+import net.questcraft.platform.handler.cscapi.communication.Packet;
 import net.questcraft.platform.handler.cscapi.communication.async.messagebuffer.MessageBuffer;
 import net.questcraft.platform.handler.cscapi.communication.async.messagebuffer.PacketMessageBuffer;
 import net.questcraft.platform.test.KryoTestClass;

@@ -13,10 +13,10 @@ import java.io.IOException;
 
 @WebSocket
 public class SocketPipelineHandler {
-    private final WebSocketHandler handler;
+    private final SocketChannelHandler handler;
     private final SocketPipeline pipeline;
 
-    public SocketPipelineHandler(WebSocketHandler handler, SocketPipeline pipeline) {
+    public SocketPipelineHandler(SocketChannelHandler handler, SocketPipeline pipeline) {
         this.handler = handler;
         this.pipeline = pipeline;
     }

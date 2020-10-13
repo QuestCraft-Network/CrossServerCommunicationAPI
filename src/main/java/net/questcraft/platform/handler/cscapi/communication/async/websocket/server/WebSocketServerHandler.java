@@ -1,13 +1,16 @@
 package net.questcraft.platform.handler.cscapi.communication.async.websocket.server;
 
-import net.questcraft.platform.handler.cscapi.communication.async.ChannelPipeline;
+import net.questcraft.platform.handler.cscapi.communication.ChannelPipeline;
+import net.questcraft.platform.handler.cscapi.communication.async.AsyncChannelPipeline;
 import net.questcraft.platform.handler.cscapi.communication.async.websocket.SocketPipeline;
 import net.questcraft.platform.handler.cscapi.communication.async.websocket.SocketPipelineHandler;
-import net.questcraft.platform.handler.cscapi.communication.async.websocket.WebSocketHandler;
+import net.questcraft.platform.handler.cscapi.communication.async.websocket.SocketChannelHandler;
+import net.questcraft.platform.handler.cscapi.communication.spark.cache.SparkCacheHandler;
+import net.questcraft.platform.handler.cscapi.communication.spark.cache.WebSocketCache;
 import net.questcraft.platform.handler.cscapi.error.CSCInstantiationException;
 import spark.Spark;
 
-public class WebSocketServerHandler extends WebSocketHandler {
+public class WebSocketServerHandler extends SocketChannelHandler {
     public WebSocketServerHandler() {
     }
 
@@ -20,15 +23,16 @@ public class WebSocketServerHandler extends WebSocketHandler {
      * @throws Exception                 Throws in the case of a invalid ChannelPipeline#Builder
      */
     @Override
-    public ChannelPipeline registerPipeline(ChannelPipeline.Builder builder) throws CSCInstantiationException, Exception {
+    public <T extends AsyncChannelPipeline> T registerPipeline(ChannelPipeline.Builder<T> builder) throws CSCInstantiationException, Exception {
         if (builder.isProductInstanceOf(SocketPipeline.class))
             throw new IllegalArgumentException("ChannelPipeline type must be of SocketPipeline to be usable with the WebSocket API");
-        ChannelPipeline chPipeline = super.registerPipeline(builder);
+        T chPipeline = super.registerPipeline(builder);
 
         SocketPipeline pipeline = (SocketPipeline) chPipeline;
 
-        Spark.webSocket(pipeline.getPath(), new SocketPipelineHandler(this, pipeline));
-        Spark.init();
+        SparkCacheHandler.SparkCache cache = new WebSocketCache(pipeline, this);
+        SparkCacheHandler.writeCache(cache);
+
         return chPipeline;
     }
 

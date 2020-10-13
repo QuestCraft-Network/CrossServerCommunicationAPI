@@ -1,9 +1,10 @@
 package net.questcraft.platform.handler.cscapi.communication.async.websocket.client;
 
-import net.questcraft.platform.handler.cscapi.communication.async.ChannelPipeline;
+import net.questcraft.platform.handler.cscapi.communication.ChannelPipeline;
+import net.questcraft.platform.handler.cscapi.communication.async.AsyncChannelPipeline;
 import net.questcraft.platform.handler.cscapi.communication.async.websocket.SocketPipeline;
 import net.questcraft.platform.handler.cscapi.communication.async.websocket.SocketPipelineHandler;
-import net.questcraft.platform.handler.cscapi.communication.async.websocket.WebSocketHandler;
+import net.questcraft.platform.handler.cscapi.communication.async.websocket.SocketChannelHandler;
 import net.questcraft.platform.handler.cscapi.error.CSCInstantiationException;
 import org.eclipse.jetty.websocket.client.ClientUpgradeRequest;
 import org.eclipse.jetty.websocket.client.WebSocketClient;
@@ -11,7 +12,7 @@ import org.eclipse.jetty.websocket.client.WebSocketClient;
 import java.net.URI;
 
 
-public class  WebSocketClientHandler extends WebSocketHandler {
+public class  WebSocketClientHandler extends SocketChannelHandler {
     public WebSocketClientHandler() {
     }
 
@@ -23,11 +24,11 @@ public class  WebSocketClientHandler extends WebSocketHandler {
      * @throws CSCInstantiationException If fails to instantiate the given class
      */
     @Override
-    public ChannelPipeline registerPipeline(ChannelPipeline.Builder builder) throws CSCInstantiationException, Exception {
+    public <T extends AsyncChannelPipeline> T registerPipeline(ChannelPipeline.Builder<T> builder) throws CSCInstantiationException, Exception {
         if (builder.isProductInstanceOf(SocketPipeline.class))
             throw new IllegalArgumentException("ChannelPipeline type must be of SocketPipeline to be usable with the WebSocket API");
 
-        ChannelPipeline chPipeline = super.registerPipeline(builder);
+        T chPipeline = super.registerPipeline(builder);
         SocketPipeline pipeline = (SocketPipeline) chPipeline;
 
         WebSocketClient client = new WebSocketClient();

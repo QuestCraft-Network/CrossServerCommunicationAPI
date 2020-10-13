@@ -2,11 +2,11 @@ package net.questcraft.platform.handler.cscapi.serializer.byteserializer;
 
 import com.esotericsoftware.kryo.io.Input;
 import com.sun.xml.internal.ws.util.ByteArrayBuffer;
-import net.questcraft.platform.handler.cscapi.communication.async.Packet;
+import net.questcraft.platform.handler.cscapi.communication.Packet;
 import net.questcraft.platform.handler.cscapi.error.CSCException;
 import net.questcraft.platform.handler.cscapi.error.InvalidClassIDDescriptor;
 import net.questcraft.platform.handler.cscapi.serializer.DeserializationHandler;
-import net.questcraft.platform.handler.cscapi.serializer.serializers.BytePacketSerializer;
+import net.questcraft.platform.handler.cscapi.serializer.serializers.byteserializers.BytePacketSerializer;
 import net.questcraft.platform.handler.cscapi.serializer.serializers.PacketSerializer;
 
 import java.io.IOException;
@@ -14,8 +14,7 @@ import java.util.Map;
 import java.util.Set;
 
 public class ByteDeserializationHandler extends ByteSerialization implements DeserializationHandler {
-
-    public Packet deserialize(Object packet, Set<Class<?>> applicableClasses) throws IOException, CSCException {
+    public Packet deserialize(Object packet, Set<Class<? extends Packet>> applicableClasses) throws IOException, CSCException {
         if (!(packet instanceof byte[])) throw new IllegalArgumentException("Packet Object must be of type byte[] to be deserializable by the ByteDeserializationHandler");
          byte[] bytePacket = (byte[]) packet;
 
@@ -23,14 +22,11 @@ public class ByteDeserializationHandler extends ByteSerialization implements Des
         byte[] kryoBytes = this.removeClassID(bytePacket);
         Input input = new Input(kryoBytes);
 
-        Object object = kryo.readObject(input, this.getClassType(bytePacket, applicableClasses));
-        if (!(object instanceof Packet)) throw new IllegalArgumentException("Object type is not of type Packet");
-
-        return (Packet) object;
+        return kryo.readObject(input, this.getClassType(bytePacket, applicableClasses));
     }
 
-    private Class<?> getClassType(byte[] bytes, Set<Class<?>> applicableClasses) throws InvalidClassIDDescriptor {
-        for (Class cls : applicableClasses) {
+    private Class<? extends Packet> getClassType(byte[] bytes, Set<Class<? extends Packet>> applicableClasses) throws InvalidClassIDDescriptor {
+        for (Class<? extends Packet> cls : applicableClasses) {
             if (this.isOfSameType(bytes, this.getSerializationKey(cls))) {
                 this.kryo.register(cls);
                 this.registerMemberVariables(cls);
@@ -72,18 +68,18 @@ public class ByteDeserializationHandler extends ByteSerialization implements Des
     }
 
 
-
-    public void registerSerializer(Class<?> type, PacketSerializer serializer) throws IllegalArgumentException {
+    @Override
+    public <T> void registerSerializer(Class<T> type, PacketSerializer<T> serializer) throws IllegalArgumentException {
         if (!(serializer instanceof BytePacketSerializer)) throw new IllegalArgumentException("Type must be of BytePacketSerializer");
-        BytePacketSerializer packetSerializer = (BytePacketSerializer) serializer;
+        BytePacketSerializer<T> packetSerializer = (BytePacketSerializer<T>) serializer;
         this.kryo.register(type, packetSerializer);
     }
 
     @Override
-    public void registerSerializer(Map<Class<?>, PacketSerializer> serializers) throws IllegalArgumentException {
+    public <T> void registerSerializer(Map<Class<T>, PacketSerializer<T>> serializers) throws IllegalArgumentException {
         for (Class<?> cls : serializers.keySet()) {
             if (!(serializers.get(cls) instanceof BytePacketSerializer)) throw new IllegalArgumentException("Type must be of BytePacketSerializer");
-            BytePacketSerializer packetSerializer = (BytePacketSerializer) serializers.get(cls);
+            BytePacketSerializer<T> packetSerializer = (BytePacketSerializer<T>) serializers.get(cls);
             this.kryo.register(cls, packetSerializer);
         }
     }
