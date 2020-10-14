@@ -37,7 +37,7 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <finalName>${artifactId}-${version}-with-dependencies</finalName>
+                    <finalName>${artifactId}-${version}</finalName>
                 </configuration>
             </plugin>
         </plugins>
