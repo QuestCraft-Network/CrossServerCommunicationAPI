@@ -11,7 +11,6 @@ import org.eclipse.jetty.websocket.client.WebSocketClient;
 
 import java.net.URI;
 
-
 public class  WebSocketClientHandler extends SocketChannelHandler {
     public WebSocketClientHandler() {
     }

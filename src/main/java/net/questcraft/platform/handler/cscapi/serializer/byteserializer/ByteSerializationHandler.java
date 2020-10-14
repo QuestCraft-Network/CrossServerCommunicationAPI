@@ -1,12 +1,13 @@
 package net.questcraft.platform.handler.cscapi.serializer.byteserializer;
 
 import com.esotericsoftware.kryo.io.Output;
-import com.sun.xml.internal.ws.util.ByteArrayBuffer;
+import com.google.common.io.ByteArrayDataOutput;
+import com.google.common.io.ByteStreams;
 import net.questcraft.platform.handler.cscapi.communication.Packet;
 import net.questcraft.platform.handler.cscapi.error.CSCException;
 import net.questcraft.platform.handler.cscapi.serializer.SerializationHandler;
-import net.questcraft.platform.handler.cscapi.serializer.serializers.byteserializers.BytePacketSerializer;
 import net.questcraft.platform.handler.cscapi.serializer.serializers.PacketSerializer;
+import net.questcraft.platform.handler.cscapi.serializer.serializers.byteserializers.BytePacketSerializer;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -17,7 +18,7 @@ import java.util.Map;
 public class ByteSerializationHandler extends ByteSerialization implements SerializationHandler {
 
     public byte[] serialize(Packet packet) throws IOException, CSCException {
-        ByteArrayBuffer byteBuffer = new ByteArrayBuffer(1);
+        ByteArrayDataOutput byteBuffer =  ByteStreams.newDataOutput(1);
 
         byteBuffer.write(this.getSerializationKey(packet.getClass()).getBytes());
         byteBuffer.write(ID_SEPARATOR);
@@ -32,7 +33,7 @@ public class ByteSerializationHandler extends ByteSerialization implements Seria
         output.close();
 
 
-        return byteBuffer.getRawData();
+        return byteBuffer.toByteArray();
     }
 
     private byte[] trimByteArray(byte[] array) {
